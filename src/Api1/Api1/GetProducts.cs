@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Api1
 {
@@ -20,7 +21,7 @@ namespace Api1
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "GetProducts")] HttpRequest req,
             [Sql(commandText:QUERY,
                 CommandType =System.Data.CommandType.Text,
-                ConnectionStringSetting = "SqlConnectionString")] IEquatable<Product> products,
+                ConnectionStringSetting = "SqlConnectionString")] IEnumerable<Product> products,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
