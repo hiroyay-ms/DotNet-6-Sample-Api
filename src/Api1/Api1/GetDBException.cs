@@ -63,9 +63,9 @@ namespace Api1
                                 product.ModifiedDate = reader.GetDateTime(10);
                             }
                         }
-                        catch
+                        catch(Exception ex)
                         {
-                            throw new Exception("Exception raised for snapshot debugging");
+                            throw new Exception(ex.Message, ex);
                         }
                     }
                 }
