@@ -30,23 +30,23 @@ namespace Api1
 
             string connectionString = Environment.GetEnvironmentVariable("SqlConnectionString");
 
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand(QUERY, conn))
                 {
-                    conn.Open();
+                    SqlParameter param = command.CreateParameter();
+                    param.ParameterName = "@id";
+                    param.SqlDbType = System.Data.SqlDbType.Int;
+                    param.Direction = System.Data.ParameterDirection.Input;
+                    param.Value = id;
 
-                    using (SqlCommand command = new SqlCommand(QUERY, conn))
+                    command.Parameters.Add(param);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        SqlParameter param = command.CreateParameter();
-                        param.ParameterName = "@id";
-                        param.SqlDbType = System.Data.SqlDbType.Int;
-                        param.Direction = System.Data.ParameterDirection.Input;
-                        param.Value = id;
-
-                        command.Parameters.Add(param);
-
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        try
                         {
                             while (reader.Read())
                             {
@@ -63,17 +63,17 @@ namespace Api1
                                 product.ModifiedDate = reader.GetDateTime(10);
                             }
                         }
+                        catch
+                        {
+                            throw new Exception("Exception raised for snapshot debugging");
+                        }
                     }
                 }
-
-                string jsonString = JsonSerializer.Serialize(product);
-
-                return new OkObjectResult(jsonString);
             }
-            catch
-            {
-                throw;
-            }
+
+            string jsonString = JsonSerializer.Serialize(product);
+
+            return new OkObjectResult(jsonString);
         }
     }
 }
