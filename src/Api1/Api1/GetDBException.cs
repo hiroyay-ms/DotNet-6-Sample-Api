@@ -70,9 +70,9 @@ namespace Api1
 
                 return new OkObjectResult(jsonString);
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message, ex);
+                throw;
             }
         }
     }
